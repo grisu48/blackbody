@@ -51,7 +51,7 @@ void MainWindow::redrawPlots() {
 
     customPlot->clearGraphs();
     customPlot->xAxis->setLabel("Frequency [Hz]");
-    customPlot->yAxis->setLabel("Planck fuction");
+    customPlot->yAxis->setLabel("Planck function [W sr-1 m-2 Hz-1]");
     customPlot->xAxis->setRange(x_bounds[0], x_bounds[1]);
     for(int i=0;i<temperatures.size();i++) {
         const double temperature = temperatures[i];
