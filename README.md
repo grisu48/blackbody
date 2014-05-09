@@ -1,4 +1,5 @@
 blackbody
 =========
 
-QT Project for creating blackbody spectra
+Creating blackbody spectra.
+Created with QT Creator
