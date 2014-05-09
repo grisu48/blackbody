@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QListView>
 #include <QStandardItemModel>
+#include <QFileDialog>
 
 namespace Ui {
 class MainWindow;
@@ -17,12 +18,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void addPlot();
-    void addPlot(const double, const QColor &);
-    void redrawPlots();
-    void refreshListModel();
-
-    void changeColor();
 
 private slots:
 
@@ -51,11 +46,23 @@ private slots:
 
     void on_txtStartFreq_editingFinished();
 
+    void on_actionQuit_triggered();
+
+    void on_actionExport_triggered();
+
 private:
     Ui::MainWindow *ui;
 
     QVector<double> temperatures;
     QVector<QColor> colors;
+
+    void addPlot();
+    void addPlot(const double, const QColor &);
+    void redrawPlots();
+    void refreshListModel();
+
+    void changeColor();
+    void exportPlot();
 };
 
 #endif // MAINWINDOW_H

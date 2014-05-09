@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <iostream>
+
+using namespace std;
+
 static const double h = 6.62606957e-34;
 static const double c = 299792458.0;
 static const double kb = 1.3806488e-23;
@@ -198,4 +202,51 @@ void MainWindow::on_txtEndFreq_editingFinished()
 void MainWindow::on_txtStartFreq_editingFinished()
 {
     this->redrawPlots();
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    exportPlot();
+}
+
+
+void MainWindow::exportPlot() {
+    QString selectedFilter = tr("Portable network graphic (*.png)");
+    QString filename = QFileDialog::getSaveFileName(this, "Export image", "", tr("Portable network graphic (*.png);; JPEG-compressed (*.jpg);; Bitmap (*.bmp);; Portable document file (*.pdf)"), &selectedFilter);
+    if(filename.isEmpty()) {
+        ui->statusBar->showMessage("Cancelled");
+        return;
+    }
+
+    if(!filename.contains(".")) {
+        ui->statusBar->showMessage("No known extension");
+        return;
+    }
+
+    QString ext = filename.mid(filename.lastIndexOf("."));
+
+    if(ext == ".png") {
+        ui->statusBar->showMessage("Exporting as PNG ... ");
+        ui->customPlot->savePng(filename);
+    } else if (ext == ".jpg" || ext == ".jpeg") {
+        ui->statusBar->showMessage("Exporting as JPG ... ");
+        ui->customPlot->saveJpg(filename);
+    } else if (ext == ".bmp") {
+        ui->statusBar->showMessage("Exporting as Bitmap ... ");
+        ui->customPlot->saveBmp(filename);
+    } else if (ext == ".pdf") {
+        ui->statusBar->showMessage("Exporting as PDF ... ");
+        ui->customPlot->savePdf(filename);
+    } else {
+        ui->statusBar->showMessage("No known extension");
+        return;
+    }
+
+    ui->statusBar->showMessage("Export completed");
+
 }

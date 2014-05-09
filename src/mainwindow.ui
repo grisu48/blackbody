@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>704</height>
+    <height>724</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Blackbody radiation</string>
+   <string>Blackbody radiation plotter</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -90,6 +90,12 @@
       </item>
       <item row="6" column="1">
        <widget class="QListView" name="lstPlots">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>200</width>
@@ -144,6 +150,12 @@
        <layout class="QGridLayout" name="gridLayoutColor">
         <item row="0" column="1">
          <widget class="QSlider" name="slRed">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
@@ -154,6 +166,12 @@
         </item>
         <item row="2" column="1">
          <widget class="QSlider" name="slBlue">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
@@ -167,6 +185,12 @@
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="lblColorRed">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Red</string>
           </property>
@@ -174,6 +198,12 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="lblColorGreen">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Green</string>
           </property>
@@ -181,6 +211,12 @@
         </item>
         <item row="1" column="1">
          <widget class="QSlider" name="slGreen">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
@@ -191,6 +227,12 @@
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="lblColorBlue">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Blue</string>
           </property>
@@ -238,6 +280,9 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionExport"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuPlots">
     <property name="title">
@@ -258,6 +303,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionAdd_plot"/>
+   <addaction name="actionDelete_plot"/>
+   <addaction name="separator"/>
+   <addaction name="actionExport"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAdd_plot">
@@ -279,6 +328,16 @@
   <action name="actionClear_plots">
    <property name="text">
     <string>Clear plots</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export ...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>
