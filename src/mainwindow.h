@@ -50,6 +50,8 @@ private slots:
 
     void on_actionExport_triggered();
 
+    void on_actionNormalize_triggered();
+
 private:
     Ui::MainWindow *ui;
 

@@ -11,10 +11,18 @@ static const double kb = 1.3806488e-23;
 
 /* Planck function */
 static inline double planck(const double temperature, const double freq) {
+#if 0
+    // DEBUG separation
     double first = (2*h*freq*freq*freq)/(c*c);
     double discriminent = (exp((h * freq)/(kb * temperature))-1.0);
     double value = first / discriminent;
     return value;
+#endif
+    return (2*h*freq*freq*freq)/(c*c)/(exp((h * freq)/(kb * temperature))-1.0);
+}
+
+static inline double nu_peak(const double temperature) {
+    return 0.568 * (c / (2.8978e-3)) * temperature;
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -33,6 +41,9 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::redrawPlots() {
+    const bool normalize = ui->actionNormalize->isChecked();
+    double norm_factor = 1.0;
+
     double x_bounds[2];
     double y_bounds[2];
     int steps = ui->spSteps->value();
@@ -50,8 +61,26 @@ void MainWindow::redrawPlots() {
     QCustomPlot *customPlot = ui->customPlot;
 
     customPlot->clearGraphs();
+    customPlot->clearItems();
     customPlot->xAxis->setLabel("Frequency [Hz]");
-    customPlot->yAxis->setLabel("Planck function [W sr-1 m-2 Hz-1]");
+    if(normalize) {
+        customPlot->yAxis->setLabel("Normalized Planck function [1]");
+
+        double maximum = 0.0;
+        for(int i=0;i<temperatures.size();i++) {
+            const double temperature = temperatures[i];
+            const double max_planck = planck(temperature, nu_peak(temperature));
+            if(max_planck > maximum) maximum = max_planck;
+        }
+
+        if(maximum <= 0.0)
+            norm_factor = 1.0;
+        else
+            norm_factor = 1.0 / maximum;
+
+    } else
+        customPlot->yAxis->setLabel("Planck function [W sr-1 m-2 Hz-1]");
+
     customPlot->xAxis->setRange(x_bounds[0], x_bounds[1]);
     for(int i=0;i<temperatures.size();i++) {
         const double temperature = temperatures[i];
@@ -62,7 +91,7 @@ void MainWindow::redrawPlots() {
         double freq;
         for(int i=0;i<steps;i++) {
             freq = x_bounds[0] + increase * (double)i;
-            const double value = planck(temperature, freq);
+            const double value = planck(temperature, freq) * norm_factor;
             x[i] = increase * (double)i;
             y[i] = value;
             if(value < y_bounds[0]) y_bounds[0] = value;
@@ -73,9 +102,22 @@ void MainWindow::redrawPlots() {
         QCPGraph *graph = customPlot->addGraph();
         graph->setPen(QPen(color));
         graph->setData(x,y);
+
+        QCPItemText *textLabel = new QCPItemText(customPlot);
+        customPlot->addItem(textLabel);
+        //textLabel->setPositionAlignment(Qt::AlignTop|Qt::AlignHCenter);
+        const double max_nu = nu_peak(temperature);
+
+        const double scaleFactor = (y_bounds[1] - y_bounds[0])/ customPlot->height();
+
+
+        textLabel->position->setCoords(max_nu, planck(temperature, max_nu) * norm_factor + (25.0*scaleFactor));
+        textLabel->setText(QString::number(temperature) + " K");
+        textLabel->setFont(QFont(font().family(), 16));
+        textLabel->setPen(QPen(color));
     }
 
-    customPlot->yAxis->setRange(y_bounds[0], y_bounds[1]);
+    customPlot->yAxis->setRange(y_bounds[0], y_bounds[1]*1.1);
     customPlot->replot();
 
 }
@@ -98,6 +140,7 @@ void MainWindow::refreshListModel() {
         model->setItem(i,0, new QStandardItem(QString::number(temperature)));
         model->setItem(i,1, new QStandardItem(QString::number(color.red()) + "," + QString::number(color.green()) + "," + QString::number(color.blue())));
     }
+
     ui->lstPlots->setModel(model);
 
 }
@@ -249,4 +292,11 @@ void MainWindow::exportPlot() {
 
     ui->statusBar->showMessage("Export completed");
 
+}
+void MainWindow::on_actionNormalize_triggered()
+{
+//    const bool normalize = !ui->actionNormalize->isChecked();
+//    ui->actionNormalize->setChecked(normalize);
+
+    this->redrawPlots();
 }
